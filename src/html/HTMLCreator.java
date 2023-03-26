@@ -164,21 +164,11 @@ public class HTMLCreator {
                 .toString();
     }
 
-   public void outputHTML() throws IOException {
-        writeHtmltoFile();
+   public void writeHTMLFile(String path) throws IOException {
+       FileWriter fstream = new FileWriter(path);
+       BufferedWriter out = new BufferedWriter(fstream);
+       out.write(htmlCode.toString());
+       out.close();
     }
 
-    public void writeHtmltoFile() throws IOException {
-
-        FileWriter fstream = new FileWriter("Budget.html");
-        BufferedWriter out = new BufferedWriter(fstream);
-        out.write(htmlCode.toString());
-        out.close();
-
-        File f = new File("Budget.html");
-
-        // open on default browser
-        Desktop.getDesktop().browse(f.toURI());
-
-    }
 }

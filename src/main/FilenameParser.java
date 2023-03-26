@@ -11,26 +11,26 @@ import java.util.Map;
 public class FilenameParser {
     private static final String FILENAMEPATTERN = "[0-9][0-9][0-9]_5710_[^__].*";
 
-    public Map<String, Department> getStringCategoryMap() {
-        return stringCategoryMap;
+    public Map<String, Department> getStringDepartmentMap() {
+        return stringDepartmentMap;
     }
 
-    private Map<String, Department> stringCategoryMap;
-    private HashSet<String> categorySet;
+    private Map<String, Department> stringDepartmentMap;
+    private HashSet<String> stringDepartmentSet;
     private String path;
 
-    private static final int INVOICE_INDEX = 0;
-    private static final int INVOICE_TYPE = 1;
-    private static final int INVOICE_CATEGORY = 2;
-    private static final int INVOICE_VENDOR = 3;
+    private static final int INDEX = 0;
+    private static final int CATEGORY = 1;
+    private static final int DEPARTMENT = 2;
+    private static final int VENDOR = 3;
 
     FilenameParser(String location) {
-        categorySet = new HashSet<>();
-        stringCategoryMap = new HashMap<>();
+        stringDepartmentSet = new HashSet<>();
+        stringDepartmentMap = new HashMap<>();
         path = location;
     }
-    public HashSet<String> getCategorySet() {
-        return categorySet;
+    public HashSet<String> getStringDepartmentSet() {
+        return stringDepartmentSet;
     }
     void parseDirectory()  {
         File workingDirectory = new File(path);
@@ -45,30 +45,30 @@ public class FilenameParser {
                     String[] invoiceInfo = parseInvoiceDetails(currentFileName);
                     Double price = parseInvoicePrice(currentFileName);
 
-                    if(invoiceInfo[INVOICE_TYPE].equals("5710")) {
-                        Department currentCategory;
-                        invoiceInfo[INVOICE_CATEGORY] = invoiceInfo[INVOICE_CATEGORY].toUpperCase();
+                    if(invoiceInfo[CATEGORY].equals("5710")) {
+                        Department currentDepartment;
+                        invoiceInfo[DEPARTMENT] = invoiceInfo[DEPARTMENT].toUpperCase();
 
                         if (invoiceInfo.length > 3) { // expected length
                             // if a new category is found it needs a new entry in map
-                            if ((currentCategory = stringCategoryMap.get(invoiceInfo[INVOICE_CATEGORY])) == null) {
-                                categorySet.add(invoiceInfo[INVOICE_CATEGORY]);
+                            if ((currentDepartment = stringDepartmentMap.get(invoiceInfo[DEPARTMENT])) == null) {
+                                stringDepartmentSet.add(invoiceInfo[DEPARTMENT]);
 
-                                currentCategory = new Department(invoiceInfo[INVOICE_CATEGORY]);
-                                stringCategoryMap.put(invoiceInfo[INVOICE_CATEGORY], currentCategory);
+                                currentDepartment = new Department(invoiceInfo[DEPARTMENT]);
+                                stringDepartmentMap.put(invoiceInfo[DEPARTMENT], currentDepartment);
                             }
 
-                            currentCategory.addInvoice(new Invoice(Integer.parseInt(invoiceInfo[INVOICE_INDEX]),
-                                    invoiceInfo[INVOICE_CATEGORY],
-                                    invoiceInfo[INVOICE_VENDOR],
+                            currentDepartment.addInvoice(new Invoice(Integer.parseInt(invoiceInfo[INDEX]),
+                                    invoiceInfo[DEPARTMENT],
+                                    invoiceInfo[VENDOR],
                                     price));
 
-                        } else { // length >= 3 means no category is described, so use miscelleanous category
-                                if((currentCategory = stringCategoryMap.get("SONSTIGES")) == null){
-                                    currentCategory = new Department("SONSTIGES");
-                                    stringCategoryMap.put("SONSTIGES", currentCategory);
+                        } else { // length >= 3 means no category is described in filename, so use miscelleanous category
+                                if((currentDepartment = stringDepartmentMap.get("SONSTIGES")) == null){
+                                    currentDepartment = new Department("SONSTIGES");
+                                    stringDepartmentMap.put("SONSTIGES", currentDepartment);
                                 }
-                            currentCategory.addInvoice(new Invoice(Integer.parseInt(invoiceInfo[INVOICE_INDEX]),
+                            currentDepartment.addInvoice(new Invoice(Integer.parseInt(invoiceInfo[INDEX]),
                                     "SONSTIGES",
                                     invoiceInfo[2], // here vendor info
                                     price));
