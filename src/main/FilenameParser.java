@@ -17,7 +17,7 @@ public class FilenameParser {
 
     private Map<String, Department> stringDepartmentMap;
     private HashSet<String> stringDepartmentSet;
-    private String path;
+    private final String path;
 
     private static final int INDEX = 0;
     private static final int CATEGORY = 1;
@@ -44,7 +44,7 @@ public class FilenameParser {
 
                     String[] invoiceInfo = parseInvoiceDetails(currentFileName);
                     Double price = parseInvoicePrice(currentFileName);
-
+                    String location = path + "\\" + currentFileName;
                     if(invoiceInfo[CATEGORY].equals("5710")) {
                         Department currentDepartment;
                         invoiceInfo[DEPARTMENT] = invoiceInfo[DEPARTMENT].toUpperCase();
@@ -61,7 +61,8 @@ public class FilenameParser {
                             currentDepartment.addInvoice(new Invoice(Integer.parseInt(invoiceInfo[INDEX]),
                                     invoiceInfo[DEPARTMENT],
                                     invoiceInfo[VENDOR],
-                                    price));
+                                    price,
+                                    location));
 
                         } else { // length >= 3 means no category is described in filename, so use miscelleanous category
                                 if((currentDepartment = stringDepartmentMap.get("SONSTIGES")) == null){
@@ -71,7 +72,8 @@ public class FilenameParser {
                             currentDepartment.addInvoice(new Invoice(Integer.parseInt(invoiceInfo[INDEX]),
                                     "SONSTIGES",
                                     invoiceInfo[2], // here vendor info
-                                    price));
+                                    price,
+                                    location));
                         }
                     }
                 }

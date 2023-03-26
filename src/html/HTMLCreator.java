@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 public class HTMLCreator {
     private StringBuilder htmlCode;
     private StringBuilder misc;
+    private static final String PATH_SKELETON = "src\\resources\\skeleton.html";
     private Map<String, Department> categoryMap;
     private HashSet<String> categorySet;
     public static final Map<String, String> ABK_TEXT =
@@ -49,7 +50,7 @@ public class HTMLCreator {
         htmlCode = new StringBuilder();
     }
     public void buildHtmlPage(){
-        createHtmlSkeleton();
+        createHtmlSkeleton(PATH_SKELETON);
 
         // inject tables for all departments into the html code
         for (String currentCategoryShortcut : categorySet) {
@@ -62,8 +63,8 @@ public class HTMLCreator {
             injectHtmlSnippet(createHtmlTable(f), "</div>");
     }
 
-    private void createHtmlSkeleton()  {
-        File skeletonHTMLFile = new File("src\\resources\\skeleton.html");
+    private void createHtmlSkeleton(String pathSkeleton)  {
+        File skeletonHTMLFile = new File(pathSkeleton);
         String codeLine;
         BufferedReader reader;
 
@@ -146,21 +147,20 @@ public class HTMLCreator {
 
         return page.toString();
     }
-    // inject new Info before the the div closes
+    private String createTableRowHTML(Invoice invoice){
+        return new StringBuilder().append("  <tr>" +
+                        "    <td><a href=\"File:\\" + invoice.getPath() + "\"target=\"_blank\">" + invoice.getIndex() + "</td></a>\n" +
+                        "    <td>" + invoice.getVendor() + "</td>\n" +
+                        "    <td>" + String.format("%.2f", invoice.getInvoiceAmount()) +" €</td>\n" +
+                        "  </tr>")
+                .toString();
+    }
+    // inject new code to the codePage right before stringOffset
     private void injectHtmlSnippet(String code, String stringOffset) {
         int offset;
 
         offset = htmlCode.indexOf(stringOffset);
         htmlCode.insert(offset, code);
-    }
-
-    private String createTableRowHTML(Invoice invoice){
-        return new StringBuilder().append("  <tr>" +
-                "    <td>" + invoice.getIndex() + "</td>\n" +
-                "    <td>" + invoice.getVendor() + "</td>\n" +
-                "    <td>" + String.format("%.2f", invoice.getInvoiceAmount()) +" €</td>\n" +
-                "  </tr>")
-                .toString();
     }
 
    public void writeHTMLFile(String path) throws IOException {
@@ -169,5 +169,4 @@ public class HTMLCreator {
        out.write(htmlCode.toString());
        out.close();
     }
-
 }
