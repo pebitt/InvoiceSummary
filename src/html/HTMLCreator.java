@@ -3,7 +3,6 @@ package html;
 import main.Department;
 import main.Invoice;
 
-import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -95,7 +94,7 @@ public class HTMLCreator {
     public String createHtmlTable(Department category) {
         StringBuilder page = new StringBuilder();
 
-        if (category.getCategory().equals("SONSTIGES")) {
+        if (category.getDepartment().equals("SONSTIGES")) {
             page.append("<br><br><h3> Sonstige Rechnungen der Stelle 5710</h3>");
 
             page.append("<table style=\"width:100%\"> ");
@@ -112,9 +111,9 @@ public class HTMLCreator {
         } else { // any other category
             page.append("<br>");
             page.append("<h3>Fachschaft " +
-                    ABK_TEXT.get(category.getCategory()) +
+                    ABK_TEXT.get(category.getDepartment()) +
                     " (" +
-                    category.getCategory() +
+                    category.getDepartment() +
                     ")</h3>"
             );
 

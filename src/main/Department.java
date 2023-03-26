@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 
 public class Department {
-    private final String category;
+    private final String department;
     private double totalCategoryAmount = 0.0f;
     private double remainingBudget = 0.0f;
 
@@ -47,8 +47,8 @@ public class Department {
             { "KU", 1000.00 },
     }).collect(Collectors.toMap(kv -> (String) kv[0], kv -> (Double) kv[1]));
 
-    public String getCategory() {
-        return category;
+    public String getDepartment() {
+        return department;
     }
 
     public double getTotalCategoryAmount() {
@@ -66,7 +66,7 @@ public class Department {
         } else
             budget = 0.0f;
 
-        this.category = category;
+        this.department = category;
         invoiceList = new ArrayList<>();
     }
 
