@@ -4,13 +4,14 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.sql.SQLOutput;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
 public class FilenameParser {
-    private static final String FILENAMEPATTERN = "[0-9][0-9][0-9]_5710_[^__].*";
-
+    private static final String FILENAMEPATTERN = "[0-9][0-9][0-9]_5710_[^_].*__[0-9]*,[0-9][0-9]\\.[pP][dD][fF]";
+//    private static final String FILENAMEPATTERN = "[0-9][0-9][0-9]_5710_[^__].*__\\.*";
     public Map<String, Department> getStringDepartmentMap() {
         return stringDepartmentMap;
     }
@@ -95,8 +96,10 @@ public class FilenameParser {
             public boolean accept(File dir, String name) {
                 if (name.matches(FILENAMEPATTERN))
                     return true;
-                else
+                else {
+                    System.out.println("Datei ausgeschlossen: " + name);
                     return false;
+                }
             }
         });
     }
